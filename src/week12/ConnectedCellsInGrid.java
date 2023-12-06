@@ -69,7 +69,7 @@ public class ConnectedCellsInGrid {
             }
         });
 
-        int result = Resultt.connectedCell(matrix);
+        int result = Result.connectedCell(matrix);
 
         bufferedWriter.write(String.valueOf(result));
         bufferedWriter.newLine();
