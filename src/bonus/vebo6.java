@@ -1,12 +1,7 @@
 package bonus;
 
 import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
 
 class Result {
 
@@ -19,19 +14,69 @@ class Result {
      *  2. INTEGER_ARRAY A
      */
 
+    private static int size = 0;
+    private static int[] pqueue = new int[1000000+5];
+
+    private static void swap(int indexOne, int indexTwo) {
+        int temp = pqueue[indexOne];
+        pqueue[indexOne] = pqueue[indexTwo];
+        pqueue[indexTwo] = temp;
+    }
+
+    public static int peek() {
+        if (size == 0) throw new IllegalStateException();
+        return pqueue[0];
+    }
+
+    public static int poll() {
+        if (size == 0) throw new IllegalStateException();
+
+        int item = pqueue[0];
+        pqueue[0] = pqueue[size - 1];
+        size--;
+        int index = 0;
+        while (2 * index + 1 < size) {
+            int smallerChildIndex = 2 * index + 1;
+            if (2 * index + 2 < size && pqueue[2 * index + 2] < pqueue[2 * index + 1]) {
+                smallerChildIndex = 2 * index + 2;
+            }
+
+            if (pqueue[index] < pqueue[smallerChildIndex]) {
+                break;
+            } else {
+                swap(index, smallerChildIndex);
+            }
+            index = smallerChildIndex;
+        }
+
+        return item;
+    }
+
+    public static void add(int item) {
+        //ensureCapacity();
+        pqueue[size] = item;
+        size++;
+
+        int index = size - 1;
+        while ((index - 1) / 2 >= 0 && pqueue[(index - 1) / 2] > pqueue[index]) {
+            swap((index - 1) / 2, index);
+            index = (index - 1) / 2;
+        }
+    }
+
     public static int cookies(int k, List<Integer> A) {
         // Write your code here
-        Queue<Integer> pqueue = new PriorityQueue<>();
+        //MyPriorityQueue pqueue = new MyPriorityQueue();
         for (int i = 0; i < A.size(); i++) {
-            pqueue.add(A.get(i));
+            add(A.get(i));
         }
         int cnt = 0;
-        while(pqueue.peek() < k && pqueue.size() > 1) {
-            int x = pqueue.poll();
-            pqueue.add(x + 2 * pqueue.poll());
+        while(peek() < k && size > 1) {
+            int x = poll();
+            add(x + 2 * poll());
             cnt++;
         }
-        if (pqueue.isEmpty() || pqueue.peek() < k) return -1;
+        if (size == 0 || peek() < k) return -1;
         return cnt;
     }
 
