@@ -10,7 +10,7 @@ public class vebo4 {
         Scanner in = new Scanner(System.in);
         n = in.nextInt();
         a = new int[n+5];
-        ST = new int[8 * n + 5];
+        ST = new int[4 * n + 5];
         for (int i = 1; i <= n; i++) {
             a[i] = in.nextInt();
         }
